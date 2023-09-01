@@ -4,17 +4,18 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import {sigin, signout, useSession, getProviders, signIn} from 'next-auth/react'
+import {signOut, useSession, getProviders, signIn} from 'next-auth/react'
 const Nav = () => {
-  const isUserLoggedIn = true;
+  // const isUserLoggedIn = true;
+  const {data: session} = useSession();
   const [providers, setproviders] = useState(null);
   const [toggleDropdown, setToggleDropdown] = useState(false)
   useEffect(() => {
-    const setProviders = async () => {
+    const setUpProviders = async () => {
       const response = await getProviders();
       setproviders(response);
     } 
-    setProviders();
+    setUpProviders();
   }, [])
 
   return (
@@ -29,13 +30,15 @@ const Nav = () => {
     </Link>
     {/* DeskTop Navigation */}
     <div className='sm:flex hidden'>
-      {isUserLoggedIn ? 
+      {session?.user ? 
       <div className='flex gap-3 md:gap-5'>
         <Link className='black_btn' href={'/create-prompt'}>Create Post</Link>
-        <button type='button' className='outline_btn'>signout</button>
+        <button type='button' onClick={signOut} className='outline_btn'>
+              Sign Out
+        </button>
         <Link href={'/profile'}>
           <Image 
-          src={'/assets/images/logo.svg'}
+          src={session?.user.image}
           width={37}
           height={37}
           className='object-contain'
@@ -61,11 +64,11 @@ const Nav = () => {
     </div>
     {/* Mobile Nav */}
     <div className='sm:hidden flex relative'>
-      {isUserLoggedIn ? 
+      {session?.user ? 
       <>
         <div className='flex'>
           <Image 
-          src={'/assets/images/logo.svg'}
+          src={session?.user.image}
           width={37}
           height={37}
           className='object-contain'
@@ -73,7 +76,7 @@ const Nav = () => {
           onClick={() => setToggleDropdown((prev) => !prev)}
           />
            {toggleDropdown && 
-           <div className='dropdown'>
+            <div className='dropdown'>
               <Link 
               href={'/profile'}
               className='dropdown_link'
@@ -93,7 +96,7 @@ const Nav = () => {
               type='button'
               onClick={() => {
                 setToggleDropdown(false)
-                signout()
+                signOut()
                 }}
               >Sign Out</button>
            </div>

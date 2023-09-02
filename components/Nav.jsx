@@ -41,7 +41,7 @@ const Nav = () => {
           src={session?.user.image}
           width={37}
           height={37}
-          className='object-contain'
+          className='object-contain rounded-full'
           alt='profile'
           />
         </Link>
@@ -71,11 +71,11 @@ const Nav = () => {
           src={session?.user.image}
           width={37}
           height={37}
-          className='object-contain'
+          className='object-contain rounded-full'
           alt='profile'
           onClick={() => setToggleDropdown((prev) => !prev)}
           />
-           {toggleDropdown && 
+          {toggleDropdown && 
             <div className='dropdown'>
               <Link 
               href={'/profile'}
@@ -99,8 +99,8 @@ const Nav = () => {
                 signOut()
                 }}
               >Sign Out</button>
-           </div>
-           } 
+          </div>
+          } 
         </div>
       </> : <>
         {
